@@ -225,6 +225,7 @@ const userDetails = [
 export const useUserStore = defineStore('Users', () => {
   const allUsers = ref(userDetails)
   const filteredUsers = ref([...allUsers.value])
+  const checkedUsers = ref([])
   const getPaidUsers = computed(() =>
     filteredUsers.value.filter((users) => users.user.paymentStatus === 'Paid')
   )
@@ -253,16 +254,17 @@ filteredUsers.value = result
     else{
       filteredUsers.value =[...allUsers.value]
     }
-    
-
-    // if (result.length > 0) {
-    //   allUsers.value = result
-    // }
   }
-  // const count = ref(0)
-  // function increment() {
-  //   count.value++
-  // }
 
-  return { allUsers, getPaidUsers, getunPaidUsers, getOverdueUsers, paymentDue, filteredUsers, searchUsers }
+  function setCheckedUsers(user, event){
+    event.stopPropagation(); // prevent the event from bubbling to the parent
+    if (event.target.checked) {
+      checkedUsers.value.push(user)
+    } else {
+      checkedUsers.value.splice(checkedUsers.value.indexOf(user), 1) // Remove 1 user from the index of the user inputted
+    }
+  }
+
+
+  return { allUsers, getPaidUsers, getunPaidUsers, getOverdueUsers, paymentDue, filteredUsers, searchUsers, setCheckedUsers }
 })

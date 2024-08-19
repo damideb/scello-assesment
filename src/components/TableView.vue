@@ -1,3 +1,21 @@
+<script setup>
+import { defineProps, ref } from 'vue'
+import More from '../assets/icons/More.svg'
+import dropdown from '../assets/icons/Union.svg'
+import { useUserStore } from '../stores/userStore.js'
+
+const allUsers = defineProps(['users'])
+
+const MoreImage = ref(More)
+const dropdownIcon = ref(dropdown)
+const showIndex = ref()
+const selectedUser = ref([])
+
+const store = useUserStore()
+
+const { setCheckedUsers } = store
+</script>
+
 <template>
   <table class="mt-3">
     <thead>
@@ -12,9 +30,25 @@
     </thead>
     <tbody>
       <template v-for="(user, index) in users" :key="index">
-        <tr class="main-row" @click="showIndex=index" :class="{'bg-[#F4F2FF]': index===showIndex}" >
+        <tr
+          class="main-row"
+          @click="showIndex = index"
+          :class="{ 'bg-[#F4F2FF]': index === showIndex }"
+        >
           <td class="space-x-3">
-            <input type="checkbox" /> <img :src="dropdownIcon" alt="dropdown-icon" class="inline" />
+            <input
+              type="checkbox"
+              v-model="selectedUser"
+              @click.stop 
+              :value="user"
+              @change="setCheckedUsers(user, $event)"
+            />
+            <img
+              :src="dropdownIcon"
+              alt="dropdown-icon"
+              class="inline"
+              :class="{ ' rotate-180': index === showIndex }"
+            />
           </td>
           <td>
             <div>
@@ -66,18 +100,18 @@
           </td>
         </tr>
 
-        <tr class="subrow " v-show="index===showIndex">
+        <tr class="subrow" v-show="index === showIndex">
           <td colspan="6">
             <table class="nested-table">
-              <thead >
-                <tr >
+              <thead>
+                <tr>
                   <th>DATE</th>
                   <th>USER ACTIVITY</th>
                   <th>DETAIL</th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(activity, i) in user.activities" :key="i" >
+                <tr v-for="(activity, i) in user.activities" :key="i">
                   <td class="text-blue300">{{ activity.activeDate }}</td>
                   <td>{{ activity.activity }}</td>
                   <td>{{ activity.detail }}</td>
@@ -95,24 +129,12 @@
         </tr>
       </template>
 
-        <tr  v-show="users.length ===0">
-            <td  colspan="6"><h3 class=" text-center text-xl text-blue300 py-3" >No User Found</h3></td>
-        </tr>
+      <tr v-show="users.length === 0">
+        <td colspan="6"><h3 class="text-center text-xl text-blue300 py-3">No User Found</h3></td>
+      </tr>
     </tbody>
   </table>
 </template>
-
-<script setup>
-import { defineProps, ref } from 'vue'
-import More from '../assets/icons/More.svg'
-import dropdown from '../assets/icons/Union.svg'
-
-const allUsers = defineProps(['users'])
-
-const MoreImage = ref(More)
-const dropdownIcon = ref(dropdown)
-const showIndex = ref()
-</script>
 
 <style scoped>
 table {
@@ -145,23 +167,22 @@ tr.main-row {
   cursor: pointer;
 }
 .nested-table {
- 
   width: 90%;
   margin-inline: auto;
 }
 
-.nested-table td{
-    background-color: #f4f2ff
+.nested-table td {
+  background-color: #f4f2ff;
 }
 
-.nested-table th{
-    background-color: #F2F0F9;
+.nested-table th {
+  background-color: #f2f0f9;
 }
 
 .nested-table th,
 .nested-table td {
   /* border: 1px solid #bbb; */
-  
+
   padding: 8px;
   border: none;
   border-bottom: 1px solid #c6c2de;
