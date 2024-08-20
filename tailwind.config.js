@@ -9,8 +9,6 @@ export default {
         blue300: '#6E6893',
         blue400: '#25213B',
         blue500: '#C6C2DE',
-        green: '#007F00',
-        red500: '#D30000',
         purple100: '#6D5BD0'
       },
       fontFamily: {

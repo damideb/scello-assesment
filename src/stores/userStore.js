@@ -246,18 +246,18 @@ export const useUserStore = defineStore('Users', () => {
   })
 
   function searchUsers(val) {
-    if(val){
-const result = allUsers.value.filter((user) => user.user.name.toLowerCase().includes(val.toLowerCase()))
-filteredUsers.value = result
-
-    }
-    else{
-      filteredUsers.value =[...allUsers.value]
+    if (val) {
+      const result = allUsers.value.filter((user) =>
+        user.user.name.toLowerCase().includes(val.toLowerCase())
+      )
+      filteredUsers.value = result
+    } else {
+      filteredUsers.value = [...allUsers.value]
     }
   }
 
-  function setCheckedUsers(user, event){
-    event.stopPropagation(); // prevent the event from bubbling to the parent
+  function setCheckedUsers(user, event) {
+    event.stopPropagation() // prevent the event from bubbling to the parent
     if (event.target.checked) {
       checkedUsers.value.push(user)
     } else {
@@ -265,6 +265,23 @@ filteredUsers.value = result
     }
   }
 
+  function payDues() {
+    const dueUsers = checkedUsers.value.filter((user) => user.user.paymentStatus !== 'Paid')
 
-  return { allUsers, getPaidUsers, getunPaidUsers, getOverdueUsers, paymentDue, filteredUsers, searchUsers, setCheckedUsers }
+    dueUsers.forEach((user) => {
+      user.user.paymentStatus = 'Paid'
+    })
+  }
+
+  return {
+    allUsers,
+    getPaidUsers,
+    getunPaidUsers,
+    getOverdueUsers,
+    paymentDue,
+    filteredUsers,
+    searchUsers,
+    setCheckedUsers,
+    payDues
+  }
 })
