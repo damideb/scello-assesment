@@ -5,22 +5,22 @@ import './assets/main.css'
 import { useUserStore } from './stores/userStore.js'
 import { ref } from 'vue'
 import filterIcon from './assets/icons/Vector.svg'
+import FilterView from './components/FilterView.vue'
 
 const store = useUserStore()
 
-const {searchUsers , payDues} = store
+const { searchUsers, payDues } = store
 const { filteredUsers, getPaidUsers, getunPaidUsers, getOverdueUsers, paymentDue } = storeToRefs(store)
 const filter = ref('all')
 const filterImage = ref(filterIcon)
 const inputVal = ref('')
-
+const showDopdown = ref(false)
 </script>
 
 <template>
-  <div class="md:w-4/5 md:mx-auto w-full mx-3  bg-blue100 p-10 mt-10 font-inter rounded-lg">
+  <div class="md:w-4/5 md:mx-auto w-full mx-3 bg-blue100 p-10 my-10 font-inter rounded-lg">
     <header>
       <h1 class="text-blue300 font-semibold">TABLE HEADING</h1>
-     
       <div
         class="flex justify-between gap-10 overflow-x-auto no-scrollbar text-sm font-medium text-blue300 mt-3 border-b-[1.5px] border-blue500 px-2"
       >
@@ -55,15 +55,26 @@ const inputVal = ref('')
           </button>
         </div>
         <div>
-          <p class=" text-nowrap">Total payable amount : <span>{{ paymentDue }}</span> USD</p>
+          <p class="text-nowrap">
+            Total payable amount : <span>{{ paymentDue }}</span> USD
+          </p>
         </div>
       </div>
     </header>
 
-    <main class="bg-white  pt-3 mt-3 rounded-lg">
+    <main class="bg-white pt-3 mt-3 rounded-lg">
       <section class="flex gap-3 px-3 flex-wrap justify-between">
         <section class="flex flex-wrap gap-3">
-          <button class="border-blue500 min-w-fit border-[1.5px] px-2 py-1 rounded"> <img :src="filterImage" class="inline mr-2" alt=" filter-icon"> Filter</button>
+          <div class="relative ">
+            <button @click="showDopdown=!showDopdown" class="border-blue500 mb-1 min-w-fit border-[1.5px] px-2 py-2 rounded">
+              <img :src="filterImage" class="inline mr-2" alt=" filter-icon" /> Filter
+            </button>
+            <div class="absolute" v-show="showDopdown">
+            <FilterView />
+            </div>
+
+          </div>
+
           <div>
             <input
               class="p-3 w-full md:w-[400px] bg-[#F4F2FF] rounded-lg text-sm text-blue300 focus:border-blue300 focus:border-2 outline-none placeholder:text-blue300"
@@ -73,7 +84,9 @@ const inputVal = ref('')
             />
           </div>
         </section>
-        <button class="bg-purple100 min-w-fit py-1 px-3 text-white rounded-lg" @click="payDues">PAY DUES</button>
+        <button class="bg-purple100 min-w-fit py-1 px-4 text-white rounded-lg" @click="payDues">
+          PAY DUES
+        </button>
       </section>
       <div v-if="filter === 'all'">
         <TableView :users="filteredUsers" />
@@ -95,8 +108,7 @@ const inputVal = ref('')
 </template>
 
 <style>
-.no-scrollbar{
-
+.no-scrollbar {
   scrollbar-width: none;
 }
 </style>

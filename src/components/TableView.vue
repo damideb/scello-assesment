@@ -6,6 +6,8 @@ import { useUserStore } from '../stores/userStore.js'
 
 const allUsers = defineProps(['users'])
 
+console.log(allUsers)
+
 const MoreImage = ref(More)
 const dropdownIcon = ref(dropdown)
 const showIndex = ref()

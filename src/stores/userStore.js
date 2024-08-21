@@ -1,5 +1,6 @@
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { defineStore } from 'pinia'
+
 
 const userDetails = [
   {
@@ -40,7 +41,7 @@ const userDetails = [
       paymentStatus: 'overdue',
       amount: 300,
       paymentDate: '15/Apr/2020',
-      email: 'example@gmail.com',
+      email: 'dami@gmail.com',
       lastLogin: '12/Apr/2020'
     },
     activities: [
@@ -59,7 +60,7 @@ const userDetails = [
       paymentStatus: 'Paid',
       amount: 250,
       paymentDate: '15/Apr/2020',
-      email: 'example@gmail.com',
+      email: 'anita@gmail.com',
       lastLogin: '12/Apr/2020'
     },
     activities: []
@@ -71,7 +72,7 @@ const userDetails = [
       paymentStatus: 'unpaid',
       amount: 200,
       paymentDate: '15/Apr/2020',
-      email: 'example@gmail.com',
+      email: 'Levin@gmail.com',
       lastLogin: '12/Apr/2020'
     },
     activities: [
@@ -108,7 +109,7 @@ const userDetails = [
       paymentStatus: 'Paid',
       amount: 750,
       paymentDate: '15/Apr/2020',
-      email: 'example@gmail.com',
+      email: 'peace@gmail.com',
       lastLogin: '12/Apr/2020'
     },
     activities: [
@@ -127,7 +128,7 @@ const userDetails = [
       paymentStatus: 'unpaid',
       amount: 200,
       paymentDate: '15/Apr/2020',
-      email: 'example@gmail.com',
+      email: 'fake@gmail.com',
       lastLogin: '14/Apr/2020'
     },
     activities: [
@@ -226,6 +227,8 @@ export const useUserStore = defineStore('Users', () => {
   const allUsers = ref(userDetails)
   const filteredUsers = ref([...allUsers.value])
   const checkedUsers = ref([])
+  const sortUsers = ref('')
+
   const getPaidUsers = computed(() =>
     filteredUsers.value.filter((users) => users.user.paymentStatus === 'Paid')
   )
@@ -256,6 +259,27 @@ export const useUserStore = defineStore('Users', () => {
     }
   }
 
+  function sortedUsers(){
+   if(sortUsers.value ==='default'){
+     return filteredUsers.value =[...allUsers.value]
+   }
+
+   filteredUsers.value.sort((a,b)=>{
+      if(sortUsers.value ==='firstName'){
+        return a.user.name.localeCompare(b.user.name)
+      }
+        if (sortUsers.value === 'lastName') {
+          return a.user.name.split(' ').pop().localeCompare(b.user.name.split(' ').pop())
+        }
+        if (sortUsers.value === 'email') {
+          return a.user.email.localeCompare(b.user.email)
+        }
+   })
+  
+  }
+
+  watch(sortUsers, ()=>sortedUsers())
+
   function setCheckedUsers(user, event) {
     event.stopPropagation() // prevent the event from bubbling to the parent
     if (event.target.checked) {
@@ -280,6 +304,8 @@ export const useUserStore = defineStore('Users', () => {
     getOverdueUsers,
     paymentDue,
     filteredUsers,
+    sortUsers,
+    sortedUsers,
     searchUsers,
     setCheckedUsers,
     payDues
