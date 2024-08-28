@@ -4,9 +4,7 @@ import More from '../assets/icons/More.svg'
 import dropdown from '../assets/icons/Union.svg'
 import { useUserStore } from '../stores/userStore.js'
 
-const allUsers = defineProps(['users'])
-
-console.log(allUsers)
+const {users} = defineProps(['users'])
 
 const MoreImage = ref(More)
 const dropdownIcon = ref(dropdown)
